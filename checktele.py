@@ -1,4 +1,5 @@
 import random
+import string
 import asyncio
 import logging
 from asyncio import sleep
@@ -55,7 +56,6 @@ with open("banned.txt", "r") as f:
     banned.append(f)
 
 que = Queue()
-
 
 # def check_user(username):
 #     url = "https://t.me/"+str(username)
@@ -942,6 +942,37 @@ def gen_user(choice):
         username =f
     else:
         pass
+    if choice == "54":
+        c = str(''.join((random.choice(a) for i in range(1))))
+        d = str(''.join((random.choice(e) for i in range(1))))
+        s = str(''.join((random.choice(e) for i in range(1))))
+        f1 = c+'_'+d+c+d
+        f2 = c+d+c+'_'+d
+        f3 = c+d+'_'+d+c
+        f4 = c+'_'+d+d+c
+        f5 = c+d+'_'+c+d
+        f6 = 'bot'+c+d+s
+        f7 = 'vip'+d1+d1+d1+d2+d2+d2
+        f8 = 'vip'+d2+d2+d2+d1+d1+d1
+        f9 = 'vip' +d1+d2+d2+d2+d2
+        f10 = 'vip' +d1+d1+d1+d1+d2
+        f = f1,f2,f3,f4,f5,f7,f8,f9,f10
+        f = random.choice(f)
+        username = f
+    else:
+        pass
+    if choice == "55":
+        c = str(''.join((random.choice(a) for i in range(1))))
+        d = str(''.join((random.choice(e) for i in range(1))))
+        s = str(''.join((random.choice(e) for i in range(1))))
+        f1 = c+d+s+s+s
+        f2 = c+d+d+d+s
+        f3 = c+c+c+d+s
+        f = f1,f2,f3
+        f = random.choice(f)
+        username = f
+    else:
+        pass
     return username 
       
         
@@ -969,7 +1000,7 @@ async def _(event):
         except Exception as ee:
             ch = None
 
-        if int(choice) < 1 or int(choice) > 53:
+        if int(choice) < 1 or int(choice) > 55:
             await event.edit(f"هذا النوع غير موجود")
             isclaim.clear()
             isclaim.append("off")
@@ -1033,7 +1064,7 @@ async def _(event):
         t.join()
         isav = que.get()
         if "Available" in isav:
-            await asyncio.sleep(1)
+            await asyncio.sleep(5)
             try:
                 await IEX(functions.channels.UpdateUsernameRequest(
                     channel=ch, username=username))
@@ -1076,6 +1107,134 @@ async def _(event):
     trys = 0
     await event.client.send_message(event.chat_id, "! انتهى الصيد " )
 #############################################################################
+ #صيد متعدد
+@IEX.on(events.NewMessage(outgoing=True, pattern=r"\.صيد متعدد (.*)"))
+async def multi_hunt(event):
+    if ispay[0] == "yes":
+        global trys
+        trys = 0
+        isclaim.clear()
+        isclaim.append("on")
+        
+        # معالجة الأمر: .صيد متعدد نوع1.نوع2.نوع3...
+        types_str = event.pattern_match.group(1)
+        
+        # تحليل الأنواع المطلوبة باستخدام النقطة (.)
+        multi_hunt_types = [t.strip() for t in types_str.split(".") if t.strip().isdigit() and 1 <= int(t.strip()) <= 55]
+        
+        if not multi_hunt_types:
+            await event.edit("**لم يتم تحديد أنواع صحيحة (1-55)**")
+            isclaim.clear()
+            isclaim.append("off")
+            return
+        
+        # إنشاء قناة واحدة للصيد
+        user = await event.get_sender()
+        uss = user.username   
+        IEX_USER = f"| @{uss}" if uss else ""
+        
+        try:
+            ch = await IEX(functions.channels.CreateChannelRequest(
+                title=f"SVJ Hunting Channel",
+                about=f"This channel to hunt usernames by - @PP6ZZ, {IEX_USER}",
+            ))
+            ch = ch.updates[1].channel_id
+            
+            photo = await IEX.upload_file(file="IEX_HUNTER.jpg")
+            try:
+                await IEX(functions.channels.EditPhotoRequest(channel=ch, photo=photo))
+            except Exception:
+                pass
+                
+        except Exception as e:
+            await IEX.send_message(event.chat_id, f"خطأ في إنشاء القناة: {str(e)}")
+            isclaim.clear()
+            isclaim.append("off")
+            return
+            
+        await event.edit(f"**✥┊ تم بدء الصيد المتعدد .. بنجاح ☑️**\n**✥┊ الأنواع: {' . '.join(multi_hunt_types)}**\n**✥┊ سيصيد يوزر واحد من بين هذه الأنواع**\n**✥┊ لمعرفة تقدم عملية الصيد (** `.حالة الصيد` **)**\n**✥┊ لإيقاف عملية الصيد (** `.ايقاف الصيد` **)**")
+        
+        # بدء الصيد - يختار نوع عشوائي من الأنواع المحددة في كل محاولة
+        Checking = True
+        while Checking:
+            if ispay[0] == 'no' or "off" in isclaim:
+                break
+                
+            # اختيار نوع عشوائي من الأنواع المحددة
+            random_type = random.choice(multi_hunt_types)
+            username = gen_user(random_type)
+            
+            t = Thread(target=lambda q, arg1: q.put(check_user(arg1)), args=(que, username))
+            t.start()
+            t.join()
+            isav = que.get()
+            
+            if "error" in isav:
+                await IEX.send_message(event.chat_id, f""" **حدث خطأ فى الفحص** \n قم بارسالها الى مطور السورس @PP6ZZ""")
+
+            if "Available" in isav:
+                await asyncio.sleep(1)
+                try:
+                    await IEX(functions.channels.UpdateUsernameRequest(channel=ch, username=username))
+                    
+                    await event.client.send_file(event.chat_id, "https://t.me/vgyhjhh/5", caption=f'''
+⌯ Done caught!🐊
+⤷ User : @{username}
+⤷ Type : {random_type}
+⤷ Clicks : {trys} 
+⤷ Save : ( Channel )
+⤷ By : ( @PP6ZZ ) @r6r6rr 
+    ''')
+                    await event.client.send_file("@PP6ZZ", "https://t.me/vgyhjhh/5", caption=f'''
+⌯ Done caught!🐊
+⤷ User : @{username} 
+⤷ Type : {random_type}
+⤷ Clicks : {trys} 
+⤷ Save : ( Channel )
+⤷ By : ( @PP6ZZ ) @r6r6rr ''')
+                    
+                    break
+                    
+                except Chack_UserName_Flood as e:
+                    hours = e.seconds // 3600
+                    minutes = (e.seconds % 3600) // 60
+                    seconds = (e.seconds % 3600) % 60
+
+                    message = f"""**تم كشف فلود عند فحص اليوزر** {username}
+** خاصية روح ثبت عليه **  
+
+ـ          **[ SVJ FloodWait Hunter ]
+ـ●━━━━━━━●
+**مدة الباند** 
+     **الساعات: {hours}\n**
+     **الدقائق: {minutes}\n**
+     **الثواني: {seconds}**
+ـ●━━━━━━━●
+ـ"""
+                    await IEX.send_message(event.chat_id, message)
+                    await IEX.send_message("@PP6ZZ", message)
+                    await sleep(e.seconds + 5)
+                    pass
+                except telethon.errors.rpcerrorlist.UsernameInvalidError:
+                    with open("banned.txt", "a") as f:
+                        f.write(f"\n{username}")
+                except Exception as eee:
+                    if "too many public channels" in str(eee):
+                        await IEX.send_message(event.chat_id, f"""- خطأ بصيد اليوزر @{username}، لديك الكثير من القنوات""")
+                        break
+                    elif "USERNAME_OCCUPIED" in str(eee):
+                        # اليوزر محجوز، استمر في المحاولة
+                        pass
+            else:
+                pass
+            trys += 1
+            
+        isclaim.clear()
+        isclaim.append("off")
+        trys = 0
+        await event.client.send_message(event.chat_id, "! انتهى الصيد المتعدد")
+
+#############################################################################
 
     # الصيد التلقائى بالرد على قناة او انشائها تلقائيا صياد + نوع تلقائى + عدد اليوزرات المطلوب 
 
@@ -1097,7 +1256,7 @@ async def _(event):
         tr = int(msg[1]) if len(msg) > 1 and msg[1].isdigit() else 1
         
         if choice not in (""):
-            if int(choice) < 1 or int(choice) > 53:                                                                                                 
+            if int(choice) < 1 or int(choice) > 55:                                                                                                 
                 await event.edit(f"هذا النوع غير موجود")
                 isclaim.clear()
                 isclaim.append("off")
@@ -1294,7 +1453,7 @@ async def _(event):
                 t.join()
                 isav = que.get()
                 if "Available" in isav:
-                    await asyncio.sleep(1)
+                    await asyncio.sleep(5)
                     try:
                         await IEX(functions.channels.UpdateUsernameRequest(
                             channel=ch, username=username))
