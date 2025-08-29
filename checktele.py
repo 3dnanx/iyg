@@ -1158,7 +1158,7 @@ async def _(event):
         t.join()
         isav = que.get()
         if "Available" in isav:
-            await asyncio.sleep(5)
+            await asyncio.sleep(1)
             try:
                 await IEX(functions.channels.UpdateUsernameRequest(
                     channel=ch, username=username))
@@ -1532,7 +1532,7 @@ async def _(event):
                 t.join()
                 isav = que.get()
                 if "Available" in isav:
-                    await asyncio.sleep(5)
+                    await asyncio.sleep(1)
                     try:
                         await IEX(functions.channels.UpdateUsernameRequest(
                             channel=ch, username=username))
@@ -1733,7 +1733,7 @@ async def _(event):
                 else:
                     pass
             trys = int(trys)
-            trys += 7
+            trys += 1
         isclaim.clear()
         isclaim.append("off")
         trys = 0
@@ -1878,7 +1878,7 @@ async def _(event):
                     pass
         else:
             pass
-        trys += 7
+        trys += 1
 
         await asyncio.sleep(2)
     isclaim.clear()
@@ -1981,7 +1981,7 @@ async def _(event):
                     pass
         else:
             pass
-        trys += 7
+        trys += 1
 
         await asyncio.sleep(5)
     isclaim.clear()
@@ -2372,7 +2372,7 @@ async def check_list(event):
                 trys += 1
             
             if not caught:
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(1)
         # رسالة النهاية بعد الصيد
         isclaim.clear()
         isclaim.append("off")
@@ -2516,10 +2516,7 @@ async def pattern_hunt(event):
                 
             trys += 1
             current_try += 1
-            
-            # إضافة تأخير بسيط بين المحاولات لتجنب الحظر
-            await asyncio.sleep(0.1)
-            
+             
         isclaim.clear()
         isclaim.append("off")
         if caught:
@@ -2753,9 +2750,6 @@ async def unified_pattern_hunt(event):
                 
             trys += 1
             current_try += 1
-            
-            # إضافة تأخير بسيط بين المحاولات لتجنب الحظر
-            await asyncio.sleep(0.1)
             
         isclaim.clear()
         isclaim.append("off")
