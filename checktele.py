@@ -2532,44 +2532,60 @@ def generate_unified_pattern(pattern, avoid_sequences=None):
     - # : حرف إنجليزي فقط (a-z)
     - % : 3 أرقام متسلسلة (فقط 123, 456, 789)
     - $ : حرف عشوائي ثابت (a-z) - يثبت مرة واحدة لكل عملية صيد
-    - & : حرف خاص عشوائي (!@#$%^&*)
+    - & : رقم عشوائي ثابت (0-9) - يثبت مرة واحدة لكل عملية صيد
     - أي حرف آخر: يبقى ثابتاً
     """
     if avoid_sequences is None:
         avoid_sequences = []
     
-    result = ""
+    result = []
     i = 0
+    length = len(pattern)
     
     # إنشاء حرف ثابت للرمز $ (يولد مرة واحدة ويستخدم لنفس العملية)
     fixed_char = None
     if '$' in pattern:
         fixed_char = random.choice(string.ascii_lowercase)
     
-    while i < len(pattern):
+    # إنشاء رقم ثابت للرمز &
+    fixed_digit = None
+    if '&' in pattern:
+        fixed_digit = str(random.randint(0, 9))
+    
+    while i < length:
         char = pattern[i]
         
         if char == '*':
             # حرف أو رقم عشوائي (a-z, 0-9)
-            result += random.choice(string.ascii_lowercase + string.digits)
+            result.append(random.choice(string.ascii_lowercase + string.digits))
         elif char == '#':
             # حرف إنجليزي فقط (a-z)
-            result += random.choice(string.ascii_lowercase)
+            result.append(random.choice(string.ascii_lowercase))
         elif char == '%':
             # 3 أرقام متسلسلة (فقط 123, 456, 789)
             allowed_patterns = ['123', '456', '789']
             numbers = random.choice(allowed_patterns)
-            result += numbers
+            result.append(numbers)
             i += 2  # تخطي الموضعين الإضافيين
         elif char == '$':
             # حرف صغير عشوائي ثابت (نفس الحرف لكل العملية)
-        elif pattern[i] == '&':
-            result.append(fixed_digit)
-            i += 1
+            if fixed_char is not None:
+                result.append(fixed_char)
+            else:
+                result.append(random.choice(string.ascii_lowercase))
+        elif char == '&':
+            # رقم عشوائي ثابت (نفس الرقم لكل العملية)
+            if fixed_digit is not None:
+                result.append(fixed_digit)
+            else:
+                result.append(str(random.randint(0, 9)))
         else:
             # أي حرف آخر يضاف كما هو
-            result += char
+            result.append(char)
         i += 1
+    
+    # تحويل القائمة إلى سلسلة نصية
+    result = ''.join(result)
     
     # التأكد من أن الطول بين 5-32 حرف ولا يبدأ برقم
     if len(result) < 5:
@@ -2581,6 +2597,12 @@ def generate_unified_pattern(pattern, avoid_sequences=None):
     # إذا بدأ برقم، نضيف حرف في البداية
     if result and result[0].isdigit():
         result = random.choice(string.ascii_lowercase) + result[1:]
+    
+    # تجنب المتواليات غير المرغوبة
+    for seq in avoid_sequences:
+        if seq in result:
+            # إذا وجدنا متوالية غير مرغوبة، نعيد توليد النمط
+            return generate_unified_pattern(pattern, avoid_sequences)
     
     return result
 
