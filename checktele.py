@@ -2342,7 +2342,7 @@ async def check_list(event):
                     continue
                 
                 if "Available" in isav:
-                    await asyncio.sleep(0.2)
+                    await asyncio.sleep(0.8)
                     try:
                         # محاولة أخذ اليوزر
                         await IEX(functions.channels.UpdateUsernameRequest(channel=ch, username=username))
