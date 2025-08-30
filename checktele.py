@@ -49,20 +49,27 @@ aaa = 'x'
 
 
 
+import random
 
 def generate_similar_pattern(input_pattern):
-    # التحقق من طول النمط أولاً
+    errors = []  # قائمة لتجميع كل الأخطاء
+    
+    # التحقق من الطول أولاً
     if len(input_pattern) < 5:
-        return "❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 5 أحرف"
+        errors.append("❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 5 أحرف")
     
-    # التحقق إذا بدأ النمط برموز غير مسموحة - يتوقف فوراً
-    if input_pattern[0] in ['*', '$', '&', '+', '_']:
-        return "❌┊النمط يبدأ برمز غير مسموح! يجب أن يبدأ بحرف أو رقم أو # أو %"
+    # التحقق من البداية (تم إزالة _ من القائمة المحظورة)
+    if input_pattern and input_pattern[0] in ['*', '$', '&', '+']:
+        errors.append("❌┊النمط يبدأ برمز غير مسموح! يجب أن يبدأ بحرف أو رقم أو # أو % أو _")
     
+    # إذا وجدنا أخطاء، نرجعها كلها ولا نكمل المعالجة
+    if errors:
+        return "\n".join(errors)
+    
+    # إذا لم تكن هناك أخطاء، نكمل معالجة النمط
     result = []
-    
-    # معالجة كل حرف على حدة
     i = 0
+    
     while i < len(input_pattern):
         char = input_pattern[i]
         
@@ -86,7 +93,6 @@ def generate_similar_pattern(input_pattern):
             while j < len(input_pattern) and input_pattern[j] == '%':
                 count += 1
                 j += 1
-            
             fixed_char = random.choice('abcdefghijklmnopqrstuvwxyz')
             result.append(fixed_char * count)
             i = j
@@ -98,7 +104,6 @@ def generate_similar_pattern(input_pattern):
             while j < len(input_pattern) and input_pattern[j] == '$':
                 count += 1
                 j += 1
-            
             fixed_digit = random.choice('0123456789')
             result.append(fixed_digit * count)
             i = j
@@ -115,58 +120,32 @@ def generate_similar_pattern(input_pattern):
             while j < len(input_pattern) and input_pattern[j] == '+':
                 count += 1
                 j += 1
-            
             fixed_digit = random.choice('0123456789')
             result.append(fixed_digit * count)
             i = j
             
         elif char == '_':
-            # _ → الشرطة السفلية تبقى كما هي (تعتبر حرف عادي)
+            # _ → الشرطة السفلية تبقى كما هي
             result.append('_')
             i += 1
             
         else:
-            # معالجة المجموعات العادية (أحرف وأرقام)
-            group = [char]
-            j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == char and input_pattern[j] not in '*#%$&+_':
-                group.append(input_pattern[j])
-                j += 1
-            
-            if char.isupper() or char.isdigit():
-                new_char = random.choice('abcdefghijklmnopqrstuvwxyz')
-                result.append(new_char * len(group))
-            else:
-                result.append(''.join(group))
-            
-            i = j
+            # أي حرف آخر يضاف كما هو
+            result.append(char)
+            i += 1
     
     return ''.join(result)
 
-# أمثلة اختبارية
-test_patterns = [
-    "++",           # قصير جداً (سيظهر خطأ)
-    "*abc123",      # يبدأ بـ * (سيظهر خطأ)
-    "$test++",      # يبدأ بـ $ (سيظهر خطأ)
-    "&username",    # يبدأ بـ & (سيظهر خطأ)
-    "+password",    # يبدأ بـ + (سيظهر خطأ)
-    "_user123",     # يبدأ بـ _ (سيظهر خطأ)
-    "abc++123",     # يبدأ بحرف (يعمل)
-    "test++pattern", # يبدأ بحرف (يعمل)
-    "#username",    # يبدأ بـ # (يعمل)
-    "%password",    # يبدأ بـ % (يعمل)
-    "123user",      # يبدأ برقم (يعمل)
-    "###++++"       # يبدأ بـ # (يعمل)
-]
+# اختبار الأمثلة
+print("=== اختبار 1 ===")
+print(generate_similar_pattern("*ab"))    # خطأين: البداية + الطول
+print("\n=== اختبار 2 ===")
+print(generate_similar_pattern("abc"))     # خطأ واحد: الطول
+print("\n=== اختبار 3 ===")
+print(generate_similar_pattern("*$abc"))   # خطأ واحد: البداية
+print("\n=== اختبار 4 ===")
+print(generate_similar_pattern("svip***")) # لا أخط
 
-print("اختبار الدالة مع منع بدء النمط برموز خاصة:")
-print("=" * 55)
-
-for pattern in test_patterns:
-    result = generate_similar_pattern(pattern)
-    print(f"النمط الأصلي: '{pattern}'")
-    print(f"الناتج: '{result}'")
-    print("---")
 
 #############################################################################
 # أضف هنا الدالة الجديدة:
