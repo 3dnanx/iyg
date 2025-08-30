@@ -50,8 +50,15 @@ aaa = 'x'
 
 
 
-
 def generate_similar_pattern(input_pattern):
+    # التحقق من طول النمط أولاً
+    if len(input_pattern) < 5:
+        return "❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 5 أحرف"
+    
+    # التحقق إذا بدأ النمط برموز غير مسموحة - يتوقف فوراً
+    if input_pattern[0] in ['*', '$', '&', '+', '_']:
+        return "❌┊النمط يبدأ برمز غير مسموح! يجب أن يبدأ بحرف أو رقم أو # أو %"
+    
     result = []
     
     # معالجة كل حرف على حدة
@@ -102,15 +109,27 @@ def generate_similar_pattern(input_pattern):
             i += 1
             
         elif char == '+':
-            # + → رقم عشوائي من مجموعة محددة (1، 3، 7، 9)
-            result.append(random.choice('1234567890'))
+            # + → رقم ثابت (نفس الرقم يتكرر)
+            count = 1
+            j = i + 1
+            while j < len(input_pattern) and input_pattern[j] == '+':
+                count += 1
+                j += 1
+            
+            fixed_digit = random.choice('0123456789')
+            result.append(fixed_digit * count)
+            i = j
+            
+        elif char == '_':
+            # _ → الشرطة السفلية تبقى كما هي (تعتبر حرف عادي)
+            result.append('_')
             i += 1
             
         else:
             # معالجة المجموعات العادية (أحرف وأرقام)
             group = [char]
             j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == char and input_pattern[j] not in '*#%$&+':
+            while j < len(input_pattern) and input_pattern[j] == char and input_pattern[j] not in '*#%$&+_':
                 group.append(input_pattern[j])
                 j += 1
             
@@ -123,6 +142,31 @@ def generate_similar_pattern(input_pattern):
             i = j
     
     return ''.join(result)
+
+# أمثلة اختبارية
+test_patterns = [
+    "++",           # قصير جداً (سيظهر خطأ)
+    "*abc123",      # يبدأ بـ * (سيظهر خطأ)
+    "$test++",      # يبدأ بـ $ (سيظهر خطأ)
+    "&username",    # يبدأ بـ & (سيظهر خطأ)
+    "+password",    # يبدأ بـ + (سيظهر خطأ)
+    "_user123",     # يبدأ بـ _ (سيظهر خطأ)
+    "abc++123",     # يبدأ بحرف (يعمل)
+    "test++pattern", # يبدأ بحرف (يعمل)
+    "#username",    # يبدأ بـ # (يعمل)
+    "%password",    # يبدأ بـ % (يعمل)
+    "123user",      # يبدأ برقم (يعمل)
+    "###++++"       # يبدأ بـ # (يعمل)
+]
+
+print("اختبار الدالة مع منع بدء النمط برموز خاصة:")
+print("=" * 55)
+
+for pattern in test_patterns:
+    result = generate_similar_pattern(pattern)
+    print(f"النمط الأصلي: '{pattern}'")
+    print(f"الناتج: '{result}'")
+    print("---")
 
 #############################################################################
 # أضف هنا الدالة الجديدة:
