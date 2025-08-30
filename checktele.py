@@ -51,7 +51,13 @@ aaa = 'x'
 
 
 
+
+
 def generate_similar_pattern(input_pattern):
+    # التحقق من طول النمط أولاً
+    if len(input_pattern) < 5:
+        return "❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على حرفين"
+    
     result = []
     
     # معالجة كل حرف على حدة
@@ -101,16 +107,16 @@ def generate_similar_pattern(input_pattern):
             result.append(random.choice('0123456789'))
             i += 1
             
-        elif char == '+':
-            # + → رقم عشوائي من مجموعة محددة (1، 3، 7، 9)
-            result.append(random.choice('1234567890'))
+        elif char == '_':
+            # _ → الشرطة السفلية تبقى كما هي
+            result.append('_')
             i += 1
             
         else:
             # معالجة المجموعات العادية (أحرف وأرقام)
             group = [char]
             j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == char and input_pattern[j] not in '*#%$&+':
+            while j < len(input_pattern) and input_pattern[j] == char and input_pattern[j] not in '*#%$&_':
                 group.append(input_pattern[j])
                 j += 1
             
@@ -123,6 +129,11 @@ def generate_similar_pattern(input_pattern):
             i = j
     
     return ''.join(result)
+
+# أمثلة اختبار
+print(generate_similar_pattern("#"))      # ❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على حرفين
+print(generate_similar_pattern("##$$$$$$")) # سيعمل بشكل طبيعي (مثال: ab555555)
+print(generate_similar_pattern("a"))      # ❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على حرفين
 
 #############################################################################
 # أضف هنا الدالة الجديدة:
@@ -2323,11 +2334,11 @@ async def check_list(event):
         
         while not caught:
             if ispay[0] == 'no' or "off" in isclaim:
-                break
+                break  # هذا هو السطر 2379 - تأكد من أن المسافة البادئة صحيحة هنا
                 
             for username in usernames:
                 if caught or ispay[0] == 'no' or "off" in isclaim:
-                    break
+                    break  # وهنا أيضًا
                     
                 username = username.strip()
                 if not username:
@@ -2368,18 +2379,18 @@ async def check_list(event):
 ⤷ By : ( @PP6ZZ ) @r6r6rr ''')
                         
                         caught = True
-                        break
+                        break  # وهنا أيضًا
                         
                     except Exception as eee:
                         if "too many public channels" in str(eee):
                             await IEX.send_message(
-                                        event.chat_id,
-                                        f"""- خطأ بصيـد اليـوزر @{username} ,\n- الخطأ :\nانت تمتلك العديد من القنوات العامة قم بحذف معرف او اكثر من قنواتك لكي تستطيع صيد هذا اليوزر""",
-                                    )
-                                    break
+                                event.chat_id,
+                                f"""- خطأ بصيـد اليـوزر @{username} ,\n- الخطأ :\nانت تمتلك العديد من القنوات العامة قم بحذف معرف او اكثر من قنواتك لكي تستطيع صيد هذا اليوزر""",
+                            )
+                            break  # وهنا أيضًا
                 trys += 1
             
-            # رسالة النهاية بعد الصيد
+        # رسالة النهاية بعد الصيد
         isclaim.clear()
         isclaim.append("off")
         await event.edit(f"**✅ تم الصيد بنجاح! @{username}**\n**⏹️ توقف الفحص بعد {trys} محاولة**")
