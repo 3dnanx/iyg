@@ -114,10 +114,17 @@ def generate_similar_pattern(input_pattern):
             result.append(fixed_digit * count)
             i = j
             
-        elif char == '_':
-            # _ → الشرطة السفلية تبقى كما هي
-            result.append('_')
+        elif char == '_' or char == '-':
+            # _ أو - → يبقى كما هو
+            result.append(char)
             i += 1
+            
+        else:
+            # أي حرف آخر يضاف كما هو
+            result.append(char)
+            i += 1
+    
+    return ''.join(result)
             
         else:
             # أي حرف آخر يضاف كما هو
