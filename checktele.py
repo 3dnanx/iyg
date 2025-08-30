@@ -51,7 +51,6 @@ aaa = 'x'
 
 
 
-
 def generate_similar_pattern(input_pattern):
     result = []
     
@@ -102,16 +101,16 @@ def generate_similar_pattern(input_pattern):
             result.append(random.choice('0123456789'))
             i += 1
             
-        elif char == '_':
-            # _ → الشرطة السفلية تبقى كما هي
-            result.append('_')
+        elif char == '+':
+            # + → رقم عشوائي من مجموعة محددة (1، 3، 7، 9)
+            result.append(random.choice('1234567890'))
             i += 1
             
         else:
             # معالجة المجموعات العادية (أحرف وأرقام)
             group = [char]
             j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == char and input_pattern[j] not in '*#%$&_':
+            while j < len(input_pattern) and input_pattern[j] == char and input_pattern[j] not in '*#%$&+':
                 group.append(input_pattern[j])
                 j += 1
             
