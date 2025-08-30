@@ -56,16 +56,7 @@ def generate_similar_pattern(input_pattern):
     # التحقق من الطول أولاً
     if len(input_pattern) < 5:
         errors.append("❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 5 أحرف")
-    
-    # التحقق من البداية (تم إزالة _ من القائمة المحظورة)
-    if input_pattern and input_pattern[0] in ['*', '$', '&', '+']:
-        errors.append("❌┊النمط يبدأ برمز غير مسموح! يجب أن يبدأ بحرف أو رقم أو # أو % أو _")
-    
-    # إذا وجدنا أخطاء، نرجعها كلها ولا نكمل المعالجة
-    if errors:
-        return "\n".join(errors)
-    
-    # إذا لم تكن هناك أخطاء، نكمل معالجة النمط
+        
     result = []
     i = 0
     
