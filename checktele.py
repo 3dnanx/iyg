@@ -49,7 +49,6 @@ aaa = 'x'
 
 
 
-import random
 
 def generate_similar_pattern(input_pattern):
     errors = []  # قائمة لتجميع كل الأخطاء
