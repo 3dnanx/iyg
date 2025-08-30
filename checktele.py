@@ -51,6 +51,7 @@ aaa = 'x'
 
 
 
+
 def generate_similar_pattern(input_pattern):
     result = []
     
@@ -101,11 +102,16 @@ def generate_similar_pattern(input_pattern):
             result.append(random.choice('0123456789'))
             i += 1
             
+        elif char == '_':
+            # _ → الشرطة السفلية تبقى كما هي
+            result.append('_')
+            i += 1
+            
         else:
             # معالجة المجموعات العادية (أحرف وأرقام)
             group = [char]
             j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == char and input_pattern[j] not in '*#%$&':
+            while j < len(input_pattern) and input_pattern[j] == char and input_pattern[j] not in '*#%$&_':
                 group.append(input_pattern[j])
                 j += 1
             
@@ -2367,13 +2373,14 @@ async def check_list(event):
                         
                     except Exception as eee:
                         if "too many public channels" in str(eee):
-                            await IEX.send_message(event.chat_id, f"""- خطأ بصيد اليوزر @{username}""")
-                            break
+                            await IEX.send_message(
+                                        event.chat_id,
+                                        f"""- خطأ بصيـد اليـوزر @{username} ,\n- الخطأ :\nانت تمتلك العديد من القنوات العامة قم بحذف معرف او اكثر من قنواتك لكي تستطيع صيد هذا اليوزر""",
+                                    )
+                                    break
                 trys += 1
             
-            if not caught:
-                await asyncio.sleep(1)
-        # رسالة النهاية بعد الصيد
+            # رسالة النهاية بعد الصيد
         isclaim.clear()
         isclaim.append("off")
         await event.edit(f"**✅ تم الصيد بنجاح! @{username}**\n**⏹️ توقف الفحص بعد {trys} محاولة**")
