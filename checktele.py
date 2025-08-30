@@ -2238,7 +2238,7 @@ async def _(event):
 ⤷ By : ( @PP6ZZ ) @r6r6rr 
     ''')
 ################################################################
-@@IEX.on(events.NewMessage(outgoing=True, pattern=r"\.لستة"))
+@IEX.on(events.NewMessage(outgoing=True, pattern=r"\.لستة"))
 async def check_list(event):
     if ispay[0] == "yes":
         # إعداد حالة الصيد
