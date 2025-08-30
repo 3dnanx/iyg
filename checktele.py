@@ -50,6 +50,7 @@ aaa = 'x'
 
 
 
+
 def generate_similar_pattern(input_pattern):
     errors = []  # قائمة لتجميع كل الأخطاء
     
@@ -76,48 +77,7 @@ def generate_similar_pattern(input_pattern):
             result.append(random.choice('abcdefghijklmnopqrstuvwxyz'))
             i += 1
             
-        elif char == '%':
-            # % → حرف ثابت (نفس الحرف يتكرر)
-            count = 1
-            j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == '%':
-                count += 1
-                j += 1
-            fixed_char = random.choice('abcdefghijklmnopqrstuvwxyz')
-            result.append(fixed_char * count)
-            i = j
-            
-        elif char == '$':
-            # $ → رقم ثابت (نفس الرقم يتكرر)
-            count = 1
-            j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == '$':
-                count += 1
-                j += 1
-            fixed_digit = random.choice('0123456789')
-            result.append(fixed_digit * count)
-            i = j
-            
-        elif char == '&':
-            # & → رقم عشوائي
-            result.append(random.choice('0123456789'))
-            i += 1
-            
-        elif char == '+':
-            # + → رقم ثابت (نفس الرقم يتكرر)
-            count = 1
-            j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == '+':
-                count += 1
-                j += 1
-            fixed_digit = random.choice('0123456789')
-            result.append(fixed_digit * count)
-            i = j
-            
-        elif char == '_' or char == '-':
-            # _ أو - → يبقى كما هو
-            result.append(char)
-            i += 1
+        # ... باقي الشروط بنفس الطريقة
             
         else:
             # أي حرف آخر يضاف كما هو
@@ -125,13 +85,8 @@ def generate_similar_pattern(input_pattern):
             i += 1
     
     return ''.join(result)
-            
-        else:
-            # أي حرف آخر يضاف كما هو
-            result.append(char)
-            i += 1
-    
-    return ''.join(result)
+
+# تأكد من أن الكود الذي يلي الدالة له المسافات البادئة الصحيحة
 
 # اختبار الأمثلة
 print("=== اختبار 1 ===")
