@@ -54,13 +54,10 @@ aaa = 'x'
 
 
 
+import random
+
 def generate_similar_pattern(input_pattern):
-    # حساب الرموز المولدة فقط - الأفضل
     generating_chars = ['*', '#', '%', '$', '&', '+']
-    pattern_length = sum(1 for char in input_pattern if char in generating_chars)
-    
-    if pattern_length < 3:  # 3 رموز مولدة كحد أدنى
-        return "❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 3 رموز مولدة (*, #, %, $, &, +)"
     
     result = []
     i = 0
@@ -76,6 +73,7 @@ def generate_similar_pattern(input_pattern):
             i += 1
             
         elif char == '#':
+            # لكل # نولد حرف عشوائي منفصل
             result.append(random.choice('abcdefghijklmnopqrstuvwxyz'))
             i += 1
             
