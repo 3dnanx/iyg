@@ -53,11 +53,15 @@ aaa = 'x'
 
 
 
+
 def generate_similar_pattern(input_pattern):
-    # التحقق من الطول أولاً
-    if len(input_pattern) < 5:
-        return "❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 5 أحرف"
-        
+    # حساب الرموز المولدة فقط - الأفضل
+    generating_chars = ['*', '#', '%', '$', '&', '+']
+    pattern_length = sum(1 for char in input_pattern if char in generating_chars)
+    
+    if pattern_length < 4:  # 4 رموز مولدة كحد أدنى
+        return "❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 4 رموز مولدة (*, #, %, $, &, +)"
+    
     result = []
     i = 0
     
@@ -65,7 +69,6 @@ def generate_similar_pattern(input_pattern):
         char = input_pattern[i]
         
         if char == '*':
-            # * → حرف أو رقم عشوائي
             if random.choice([True, False]):
                 result.append(random.choice('abcdefghijklmnopqrstuvwxyz'))
             else:
@@ -73,12 +76,10 @@ def generate_similar_pattern(input_pattern):
             i += 1
             
         elif char == '#':
-            # # → حرف عشوائي
             result.append(random.choice('abcdefghijklmnopqrstuvwxyz'))
             i += 1
             
         elif char == '%':
-            # % → حرف ثابت (نفس الحرف يتكرر)
             count = 1
             j = i + 1
             while j < len(input_pattern) and input_pattern[j] == '%':
@@ -89,7 +90,6 @@ def generate_similar_pattern(input_pattern):
             i = j
             
         elif char == '$':
-            # $ → رقم ثابت (نفس الرقم يتكرر)
             count = 1
             j = i + 1
             while j < len(input_pattern) and input_pattern[j] == '$':
@@ -100,12 +100,10 @@ def generate_similar_pattern(input_pattern):
             i = j
             
         elif char == '&':
-            # & → رقم عشوائي
             result.append(random.choice('0123456789'))
             i += 1
             
         elif char == '+':
-            # + → رقم ثابت (نفس الرقم يتكرر)
             count = 1
             j = i + 1
             while j < len(input_pattern) and input_pattern[j] == '+':
@@ -115,13 +113,11 @@ def generate_similar_pattern(input_pattern):
             result.append(fixed_digit * count)
             i = j
             
-        elif char == '_':
-            # _ أو - → يبقى كما هو (حرف ثابت)
+        elif char in ['_', '-']:
             result.append(char)
             i += 1
             
         else:
-            # أي حرف آخر يضاف كما هو (حرف ثابت)
             result.append(char)
             i += 1
     
