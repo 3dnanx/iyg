@@ -59,8 +59,8 @@ def generate_similar_pattern(input_pattern):
     generating_chars = ['*', '#', '%', '$', '&', '+']
     pattern_length = sum(1 for char in input_pattern if char in generating_chars)
     
-    if pattern_length < 4:  # 4 رموز مولدة كحد أدنى
-        return "❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 4 رموز مولدة (*, #, %, $, &, +)"
+    if pattern_length < 3:  # 3 رموز مولدة كحد أدنى
+        return "❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 3 رموز مولدة (*, #, %, $, &, +)"
     
     result = []
     i = 0
