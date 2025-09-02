@@ -57,7 +57,12 @@ aaa = 'x'
 import random
 
 def generate_similar_pattern(input_pattern):
-    generating_chars = ['*', '#', '%', '$', '&', '+']
+    # تعريف المتغيرات للرموز الثابتة
+    global fixed_char, fixed_digit
+    if 'fixed_char' not in globals():
+        fixed_char = None
+    if 'fixed_digit' not in globals():
+        fixed_digit = None
     
     result = []
     i = 0
@@ -66,6 +71,7 @@ def generate_similar_pattern(input_pattern):
         char = input_pattern[i]
         
         if char == '*':
+            # حرف أو رقم عشوائي (a-z, 0-9)
             if random.choice([True, False]):
                 result.append(random.choice('abcdefghijklmnopqrstuvwxyz'))
             else:
@@ -73,67 +79,50 @@ def generate_similar_pattern(input_pattern):
             i += 1
             
         elif char == '#':
-            # لكل # نولد حرف عشوائي منفصل
+            # حرف إنجليزي فقط (a-z)
             result.append(random.choice('abcdefghijklmnopqrstuvwxyz'))
             i += 1
             
         elif char == '%':
-            count = 1
-            j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == '%':
-                count += 1
-                j += 1
-            fixed_char = random.choice('abcdefghijklmnopqrstuvwxyz')
-            result.append(fixed_char * count)
-            i = j
+            # 3 أرقام متسلسلة (فقط 123, 456, 789)
+            allowed_patterns = ['123', '456', '789']
+            result.append(random.choice(allowed_patterns))
+            i += 1
             
         elif char == '$':
-            count = 1
-            j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == '$':
-                count += 1
-                j += 1
-            fixed_digit = random.choice('0123456789')
-            result.append(fixed_digit * count)
-            i = j
+            # حرف عشوائي ثابت (يثبت مرة واحدة لكل عملية صيد)
+            if fixed_char is None:
+                fixed_char = random.choice('abcdefghijklmnopqrstuvwxyz')
+            result.append(fixed_char)
+            i += 1
             
         elif char == '&':
-            result.append(random.choice('0123456789'))
+            # رقم عشوائي ثابت (يثبت مرة واحدة لكل عملية صيد)
+            if fixed_digit is None:
+                fixed_digit = random.choice('0123456789')
+            result.append(fixed_digit)
             i += 1
             
         elif char == '+':
-            count = 1
-            j = i + 1
-            while j < len(input_pattern) and input_pattern[j] == '+':
-                count += 1
-                j += 1
-            fixed_digit = random.choice('0123456789')
-            result.append(fixed_digit * count)
-            i = j
+            # رقم عشوائي غير ثابت (يتغير في كل مرة)
+            result.append(random.choice('0123456789'))
+            i += 1
             
         elif char in ['_', '-']:
+            # الشرطة السفلية والشرطة العادية تبقى كما هي
             result.append(char)
             i += 1
             
         else:
+            # أي حرف آخر يبقى ثابتاً
             result.append(char)
             i += 1
     
-    return ''.join(result)
+    # إعادة تعيين الرموز الثابتة بعد الانتهاء
+    fixed_char = None
+    fixed_digit = None
     
-# تأكد من أن الكود الذي يلي الدالة له المسافات البادئة الصحيحة
-
-# اختبار الأمثلة
-print("=== اختبار 1 ===")
-print(generate_similar_pattern("*ab"))    # خطأين: البداية + الطول
-print("\n=== اختبار 2 ===")
-print(generate_similar_pattern("abc"))     # خطأ واحد: الطول
-print("\n=== اختبار 3 ===")
-print(generate_similar_pattern("*$abc"))   # خطأ واحد: البداية
-print("\n=== اختبار 4 ===")
-print(generate_similar_pattern("svip***")) # لا أخط
-
-
+    return ''.join(result)
 #############################################################################
 # أضف هنا الدالة الجديدة:
 def check_choice_valid(choice):
