@@ -66,7 +66,7 @@ async def join_channel():
     try:
         await IEX(JoinChannelRequest("@r6r6rr"))
         await IEX.send_message("@PP6ZZ", f'''تم بدأالسورس بنجاح
-                                  ايها المطور @PP6ZZ''')
+                                  ايها المطور @anxxx''')
     except BaseException:
         pass
 
@@ -184,7 +184,7 @@ async def _(event):
     ms = (end - start).microseconds / 1000
     await event.edit(f'''
 **☆ WELCOME TO SVJ **
-☆ **VERSION : 5.0**
+☆ **VERSION : 6.0**
 ☆ **PING : `{ms}`**
 ☆ **DATE : `{m9zpi}`**
 ☆ **ID : `{event.sender_id}`**
@@ -210,7 +210,7 @@ async def OwnerStart(event):
 async def OwnerStart(event):
     sender = await event.get_sender()
     if sender.id == ownerhson_id :
-        await event.reply('''مرحبا ايها المطور @PP6ZZ 
+        await event.reply('''مرحبا ايها المطور @anxxx 
                           تم بدء السورس بنجاح للمنصب''')
 
 @IEX.on(events.NewMessage(outgoing=True, pattern=r"\.اعادة تشغيل"))
