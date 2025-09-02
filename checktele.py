@@ -2428,29 +2428,8 @@ async def pattern_hunt(event):
         pattern = str(msg[0])
         num_tries = int(msg[1]) if len(msg) > 1 and msg[1].isdigit() else 0  # 0 يعني لا نهائي
         
-        # ✅ التحقق من صحة النمط (معدل لقبول 5 أحرف فما فوق)
-        pattern_clean = pattern.replace('*', '').replace('#', '').replace('%', '').replace('$', '').replace('&', '')
-        
-        if len(pattern_clean) < 5 and len(pattern_clean) > 0:
-            await event.edit("**❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 5 أحرف**")
-            isclaim.clear()
-            isclaim.append("off")
-            return
-        elif len(pattern_clean) == 0:
-            # السماح بأنماط تحتوي على رموز فقط بشرط أن يكون النمط نفسه بطول كافٍ
-            if len(pattern) < 5:
-                await event.edit("**❌┊النمط قصير جداً! يجب أن يحتوي على الأقل على 5 رموز**")
-                isclaim.clear()
-                isclaim.append("off")
-                return
-        
-        # التحقق المبدئي إذا النمط يمكن أن ينتج اسم صالح
-        test_username = generate_similar_pattern(pattern)
-        if test_username is None:
-            await event.edit("**❌┊النمط غير صالح! لا يمكن توليد اسم يلبي الشروط:**\n**• 5 أحرف على الأقل**\n**• لا يبدأ برقم**\n**• لا يزيد عن 32 حرف**")
-            isclaim.clear()
-            isclaim.append("off")
-            return
+        # ✅ إزالة جميع قيود التحقق من النمط
+        # السماح بأي نمط يتم إدخاله دون شروط
         
         replly = await event.get_reply_message()
         
@@ -2507,12 +2486,9 @@ async def pattern_hunt(event):
             # توليد اسم مستخدم بناءً على النمط
             username = generate_similar_pattern(pattern)
             
-            # إذا لم تتحقق الشروط، نتوقف فوراً
+            # إذا لم تتحقق الشروط، نتخطى فقط ولا نتوقف
             if username is None:
-                await event.edit("**❌┊تم إيقاف الصيد! النمط لا ينتج أسماء صالحة:**\n**• يجب أن يكون 5 أحرف على الأقل**\n**• لا يجب أن يبدأ برقم**\n**• لا يزيد عن 32 حرف**")
-                isclaim.clear()
-                isclaim.append("off")
-                return
+                continue  # ننتقل للمحاولة التالية بدلاً من التوقف
                 
             t = Thread(target=lambda q, arg1: q.put(check_user(arg1)), args=(que, username))
             t.start()
@@ -2520,7 +2496,7 @@ async def pattern_hunt(event):
             isav = que.get()
             
             if "Available" in isav:
-                await asyncio.sleep(1)
+                await asyncio.sleep(0.8)
                 try:
                     await IEX(functions.channels.UpdateUsernameRequest(channel=ch, username=username))
                     
