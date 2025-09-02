@@ -30,13 +30,25 @@ async def _(event):
 async def leave_IEX_channel(event):
     dialogs = await IEX.get_dialogs()
     await event.edit(f"**جارى التحقق من القنوات**")
-    left_count = 0
-    for dialog in dialogs:
-        if isinstance(dialog.entity, Channel) and dialog.entity.title == 'SVJ Hunting Channal' and not dialog.entity.username:
-            try:
-                await IEX(LeaveChannelRequest(dialog.entity))
-                left_count += 1
-            except Exception as e:
-                await event.respond(f"**خطأ أثناء مغادرة القناة: {e}**")
+    left_count_svj = 0
+    left_count_pattern = 0
     
-    await event.edit(f"**تم مغادرة {left_count} قناة ( SVJ Hunting Channal ) خاصة.**")
+    for dialog in dialogs:
+        if isinstance(dialog.entity, Channel) and not dialog.entity.username:
+            # مغادرة قنوات SVJ Hunting Channal
+            if dialog.entity.title == 'SVJ Hunting Channal':
+                try:
+                    await IEX(LeaveChannelRequest(dialog.entity))
+                    left_count_svj += 1
+                except Exception as e:
+                    await event.respond(f"**خطأ أثناء مغادرة قناة SVJ: {e}**")
+            
+            # مغادرة قنوات SVJ Pattern Hunting Channel
+            elif dialog.entity.title == 'SVJ Pattern Hunting Channel':
+                try:
+                    await IEX(LeaveChannelRequest(dialog.entity))
+                    left_count_pattern += 1
+                except Exception as e:
+                    await event.respond(f"**خطأ أثناء مغادرة قناة Pattern: {e}**")
+    
+    await event.edit(f"**تم مغادرة {left_count_svj} قناة (SVJ Hunting Channal) و {left_count_pattern} قناة (SVJ Pattern Hunting Channel) خاصة.**")
