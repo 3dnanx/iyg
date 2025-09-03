@@ -2412,13 +2412,48 @@ async def pattern_hunt(event):
         isclaim.clear()
         isclaim.append("on")
         
-        # الحصول على النمط وعدد المحاولات
+        # الحصول على الأنماط وعدد المحاولات
         msg = ("".join(event.text.split(maxsplit=1)[1:])).split(" ", 1)
-        pattern = str(msg[0])
+        patterns_input = str(msg[0])
         num_tries = int(msg[1]) if len(msg) > 1 and msg[1].isdigit() else 0  # 0 يعني لا نهائي
         
-        # ✅ إزالة جميع قيود التحقق من النمط
-        # السماح بأي نمط يتم إدخاله دون شروط
+        # فصل الأنماط باستخدام النقطة (.) أو الفاصلة (،)
+        patterns = []
+        if '.' in patterns_input:
+            patterns = patterns_input.split('.')
+        elif '،' in patterns_input:
+            patterns = patterns_input.split('،')
+        else:
+            patterns = [patterns_input]
+        
+        # تنظيف الأنماط من المسافات الزائدة
+        patterns = [pattern.strip() for pattern in patterns if pattern.strip()]
+        
+        if not patterns:
+            await event.edit("**❌┊لم يتم تحديد أي نمط صحيح**")
+            isclaim.clear()
+            isclaim.append("off")
+            return
+        
+        # ✅ التحقق الجديد: إذا كان النمط يبدأ برقم ويتوقف فوراً
+        invalid_patterns = []
+        
+        for pattern in patterns:
+            # إذا كان النمط يبدأ برقم ولا يحتوي على رموز خاصة (*#$%&)
+            if pattern and pattern[0].isdigit() and not any(char in pattern for char in '*#$%&'):
+                invalid_patterns.append(pattern)
+        
+        # إذا وجد أنماط غير صالحة، يتوقف فوراً
+        if invalid_patterns:
+            error_message = f"**❌┊ الأنماط التالية غير صالحة (تبدأ برقم):**\n"
+            for invalid in invalid_patterns:
+                error_message += f"• `{invalid}`\n"
+            error_message += "\n**⏹️┊ تم إيقاف العملية**"
+            
+            await event.edit(error_message)
+            isclaim.clear()
+            isclaim.append("off")
+            return  # ✅ التوقف الكامل هنا
         
         replly = await event.get_reply_message()
         
@@ -2427,12 +2462,12 @@ async def pattern_hunt(event):
             if replly and replly.text.startswith('@'): 
                 ch = replly.text
                 if num_tries > 0:
-                    await event.edit(f"**✥┊ تم بـدء الصيد بالنمط .. بنجـاح ☑️**\n**✥┊ النمط:** `{pattern}`\n**✥┊ على القنـاة:** {ch}\n**✥┊ عدد المحاولات:** {num_tries}\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
+                    await event.edit(f"**✥┊ تم بـدء الصيد بالأنماط .. بنجـاح ☑️**\n**✥┊ الأنماط:** `{' . '.join(patterns)}`\n**✥┊ على القنـاة:** {ch}\n**✥┊ عدد المحاولات:** {num_tries}\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
                 else:
-                    await event.edit(f"**✥┊ تم بـدء الصيد بالنمط .. بنجـاح ☑️**\n**✥┊ النمط:** `{pattern}`\n**✥┊ على القنـاة:** {ch}\n**✥┊ عدد المحاولات:** لا نهائي\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
+                    await event.edit(f"**✥┊ تم بـدء الصيد بالأنماط .. بنجـاح ☑️**\n**✥┊ الأنماط:** `{' . '.join(patterns)}`\n**✥┊ على القنـاة:** {ch}\n**✥┊ عدد المحاولات:** لا نهائي\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
             else:
                 ch = await IEX(functions.channels.CreateChannelRequest(
-                    title="SVJ Pattern Hunting Channel",
+                    title="SVJ Multi Pattern Hunting Channel",
                     about=f"This channel to hunt pattern usernames by - @PP6ZZ, {IEX_USER}",
                 ))
                 ch = ch.updates[1].channel_id
@@ -2447,9 +2482,9 @@ async def pattern_hunt(event):
                 invite_link = invite.link
                 
                 if num_tries > 0:
-                    await event.edit(f"**✥┊ تم بـدء الصيد بالنمط .. بنجـاح ☑️**\n**✥┊ النمط:** `{pattern}`\n**✥┊ على القنـاة:** [اضغط هنا]({invite_link})\n**✥┊ عدد المحاولات:** {num_tries}\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
+                    await event.edit(f"**✥┊ تم بـدء الصيد بالأنماط .. بنجـاح ☑️**\n**✥┊ الأنماط:** `{' . '.join(patterns)}`\n**✥┊ على القنـاة:** [اضغط هنا]({invite_link})\n**✥┊ عدد المحاولات:** {num_tries}\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
                 else:
-                    await event.edit(f"**✥┊ تم بـدء الصيد بالنمط .. بنجـاح ☑️**\n**✥┊ النمط:** `{pattern}`\n**✥┊ على القنـاة:** [اضغط هنا]({invite_link})\n**✥┊ عدد المحاولات:** لا نهائي\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
+                    await event.edit(f"**✥┊ تم بـدء الصيد بالأنماط .. بنجـاح ☑️**\n**✥┊ الأنماط:** `{' . '.join(patterns)}`\n**✥┊ على القنـاة:** [اضغط هنا]({invite_link})\n**✥┊ عدد المحاولات:** لا نهائي\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
                 
         except Exception as e:
             await IEX.send_message(event.chat_id, f"خطأ في انشاء القناة: {str(e)}")
@@ -2462,7 +2497,6 @@ async def pattern_hunt(event):
         caught = False
         current_try = 0
         
-        # استخدام While True للاستمرار حتى الصيد أو الإيقاف
         while True:
             if ispay[0] == 'no' or "off" in isclaim:
                 break
@@ -2472,8 +2506,11 @@ async def pattern_hunt(event):
                 await event.client.send_message(event.chat_id, "! انتهت المحاولات دون صيد يوزر")
                 break
                 
+            # اختيار نمط عشوائي من الأنماط المتاحة
+            current_pattern = random.choice(patterns)
+            
             # توليد اسم مستخدم بناءً على النمط
-            username = generate_similar_pattern(pattern)
+            username = generate_similar_pattern(current_pattern)
             
             # إذا لم تتحقق الشروط، نتخطى فقط ولا نتوقف
             if username is None:
@@ -2492,7 +2529,7 @@ async def pattern_hunt(event):
                     await event.client.send_file(event.chat_id, "https://t.me/vgyhjhh/5", caption=f'''
 ⌯ Done caught!🐊
 ⤷ User : @{username}
-⤷ Pattern : {pattern}
+⤷ Pattern : {current_pattern}
 ⤷ Clicks : {trys} 
 ⤷ Save : ( Channel )
 ⤷ By : ( @PP6ZZ ) @r6r6rr 
@@ -2500,7 +2537,7 @@ async def pattern_hunt(event):
                     await event.client.send_file("@PP6ZZ", "https://t.me/vgyhjhh/5", caption=f'''
 ⌯ Done caught!🐊
 ⤷ User : @{username} 
-⤷ Pattern : {pattern}
+⤷ Pattern : {current_pattern}
 ⤷ Clicks : {trys} 
 ⤷ Save : ( Channel )
 ⤷ By : ( @PP6ZZ ) @r6r6rr ''')
@@ -2521,7 +2558,7 @@ async def pattern_hunt(event):
         isclaim.clear()
         isclaim.append("off")
         if caught:
-            await event.client.send_message(event.chat_id, f"! تم صيد اليوزر بنجاح: @{username}")
+            await event.client.send_message(event.chat_id, f"! تم صيد اليوزر بنجاح: @{username} (النمط: {current_pattern})")
 ################################################################
 def generate_unified_pattern(pattern, avoid_sequences=None):
     """
