@@ -2508,7 +2508,7 @@ async def pattern_hunt(event):
                     await event.edit(f"**✥┊ تم بـدء الصيد بالأنماط .. بنجـاح ☑️**\n**✥┊ الأنماط:** `{' . '.join(patterns)}`\n**✥┊ على القنـاة:** {ch}\n**✥┊ عدد المحاولات:** لا نهائي\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
             else:
                 ch = await IEX(functions.channels.CreateChannelRequest(
-                    title="SVJ Hunting Channel",
+                    title="SVJ Pattern Hunting Channel",
                     about=f"This channel to hunt usernames by - @PP6ZZ, {IEX_USER}",
                 ))
                 ch = ch.updates[1].channel_id
