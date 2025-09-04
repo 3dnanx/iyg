@@ -2415,9 +2415,9 @@ async def pattern_hunt(event):
         # الحصول على الأنماط وعدد المحاولات
         msg = ("".join(event.text.split(maxsplit=1)[1:])).split(" ", 1)
         patterns_input = str(msg[0])
-        num_tries = int(msg[1]) if len(msg) > 1 and msg[1].isdigit() else 0  # 0 يعني لا نهائي
+        num_tries = int(msg[1]) if len(msg) > 1 and msg[1].isdigit() else 0
         
-        # فصل الأنماط باستخدام النقطة (.) أو الفاصلة (،)
+        # فصل الأنماط
         patterns = []
         if '.' in patterns_input:
             patterns = patterns_input.split('.')
@@ -2426,7 +2426,7 @@ async def pattern_hunt(event):
         else:
             patterns = [patterns_input]
         
-        # تنظيف الأنماط من المسافات الزائدة
+        # تنظيف الأنماط
         patterns = [pattern.strip() for pattern in patterns if pattern.strip()]
         
         if not patterns:
@@ -2435,25 +2435,66 @@ async def pattern_hunt(event):
             isclaim.append("off")
             return
         
-        # ✅ التحقق الجديد: إذا كان النمط يبدأ برقم ويتوقف فوراً
-        invalid_patterns = []
-        
+        # ✅ التحقق: يجب أن يكون النمط 5 أحرف على الأقل
+        short_patterns = []
         for pattern in patterns:
-            # إذا كان النمط يبدأ برقم ولا يحتوي على رموز خاصة (*#$%&)
-            if pattern and pattern[0].isdigit() and not any(char in pattern for char in '*#$%&'):
-                invalid_patterns.append(pattern)
+            if len(pattern) < 5:
+                short_patterns.append(pattern)
         
-        # إذا وجد أنماط غير صالحة، يتوقف فوراً
-        if invalid_patterns:
-            error_message = f"**❌┊ الأنماط التالية غير صالحة (تبدأ برقم):**\n"
-            for invalid in invalid_patterns:
-                error_message += f"• `{invalid}`\n"
+        if short_patterns:
+            error_message = f"**❌┊ الأنماط التالية قصيرة جداً:**\n"
+            for short in short_patterns:
+                error_message += f"• `{short}` ({len(short)} أحرف)\n"
+            error_message += "\n**⛔┊ يجب أن يحتوي النمط على 5 أحرف على الأقل**"
             error_message += "\n**⏹️┊ تم إيقاف العملية**"
             
             await event.edit(error_message)
             isclaim.clear()
             isclaim.append("off")
-            return  # ✅ التوقف الكامل هنا
+            return
+        
+        # ✅ التحقق من الأنماط التي تبدأ برموز ممنوعة ($ + &)
+        invalid_start_patterns = []
+        forbidden_starts = ['$', '+', '&']
+        
+        for pattern in patterns:
+            # إذا كان النمط يبدأ برمز ممنوع
+            if pattern and pattern[0] in forbidden_starts:
+                invalid_start_patterns.append(pattern)
+        
+        # إذا وجد أنماط تبدأ برموز ممنوعة
+        if invalid_start_patterns:
+            error_message = f"**❌┊ الأنماط التالية غير صالحة (تبدأ برموز ممنوعة):**\n"
+            for invalid in invalid_start_patterns:
+                error_message += f"• `{invalid}`\n"
+            error_message += "\n**⛔┊ الرموز التالية ممنوعة في بداية النمط: $ + &**"
+            error_message += "\n**⏹️┊ تم إيقاف العملية**"
+            
+            await event.edit(error_message)
+            isclaim.clear()
+            isclaim.append("off")
+            return
+        
+        # ✅ التحقق: يرفض أي نمط يبدأ برقم (حتى بدون رموز)
+        invalid_digit_patterns = []
+        
+        for pattern in patterns:
+            # إذا كان النمط يبدأ برقم (أي رقم)
+            if pattern and pattern[0].isdigit():
+                invalid_digit_patterns.append(pattern)
+        
+        # إذا وجد أنماط تبدأ برقم
+        if invalid_digit_patterns:
+            error_message = f"**❌┊ الأنماط التالية غير صالحة (تبدأ برقم):**\n"
+            for invalid in invalid_digit_patterns:
+                error_message += f"• `{invalid}`\n"
+            error_message += "\n**⛔┊ ممنوع بدء النمط بأي رقم**"
+            error_message += "\n**⏹️┊ تم إيقاف العملية**"
+            
+            await event.edit(error_message)
+            isclaim.clear()
+            isclaim.append("off")
+            return
         
         replly = await event.get_reply_message()
         
@@ -2467,8 +2508,8 @@ async def pattern_hunt(event):
                     await event.edit(f"**✥┊ تم بـدء الصيد بالأنماط .. بنجـاح ☑️**\n**✥┊ الأنماط:** `{' . '.join(patterns)}`\n**✥┊ على القنـاة:** {ch}\n**✥┊ عدد المحاولات:** لا نهائي\n**✥┊ لمعرفـة تقـدم عمليـة الصيد (** `.حالة الصيد` **)**")
             else:
                 ch = await IEX(functions.channels.CreateChannelRequest(
-                    title="SVJ Multi Pattern Hunting Channel",
-                    about=f"This channel to hunt pattern usernames by - @PP6ZZ, {IEX_USER}",
+                    title="SVJ Hunting Channel",
+                    about=f"This channel to hunt usernames by - @PP6ZZ, {IEX_USER}",
                 ))
                 ch = ch.updates[1].channel_id
                 
@@ -2501,20 +2542,15 @@ async def pattern_hunt(event):
             if ispay[0] == 'no' or "off" in isclaim:
                 break
                 
-            # إذا كان هناك حد للمحاولات وتحقق
             if num_tries > 0 and current_try >= num_tries:
                 await event.client.send_message(event.chat_id, "! انتهت المحاولات دون صيد يوزر")
                 break
                 
-            # اختيار نمط عشوائي من الأنماط المتاحة
             current_pattern = random.choice(patterns)
-            
-            # توليد اسم مستخدم بناءً على النمط
             username = generate_similar_pattern(current_pattern)
             
-            # إذا لم تتحقق الشروط، نتخطى فقط ولا نتوقف
             if username is None:
-                continue  # ننتقل للمحاولة التالية بدلاً من التوقف
+                continue
                 
             t = Thread(target=lambda q, arg1: q.put(check_user(arg1)), args=(que, username))
             t.start()
@@ -2524,7 +2560,15 @@ async def pattern_hunt(event):
             if "Available" in isav:
                 await asyncio.sleep(0.8)
                 try:
+                    # ✅ الخطوة 1: تغيير يوزر القناة
                     await IEX(functions.channels.UpdateUsernameRequest(channel=ch, username=username))
+                    
+                    # ✅ الخطوة 2: تغيير اسم القناة إلى اسم اليوزر
+                    await IEX(functions.channels.EditTitleRequest(
+                        channel=ch,
+                        title=username
+                    ))
+                    
                     
                     await event.client.send_file(event.chat_id, "https://t.me/vgyhjhh/5", caption=f'''
 ⌯ Done caught!🐊
@@ -2547,7 +2591,7 @@ async def pattern_hunt(event):
                     
                 except Exception as eee:
                     if "too many public channels" in str(eee):
-                        await IEX.send_message(event.chat_id, f"""- خطأ بصيـد اليـوزر @{username} ,\n- الخطأ :\nانت تمتلك العديد من القنوات العامة قم بحذف معرف او اكثر من قنواتك لكي تستطيع صيد هذا اليوزر""")
+                        await IEX.send_message(event.chat_id, f"""- خطأ بصيـد اليـوزر تملك الكثير من القنوات @{username}""")
                         break
             else:
                 pass
@@ -2559,6 +2603,7 @@ async def pattern_hunt(event):
         isclaim.append("off")
         if caught:
             await event.client.send_message(event.chat_id, f"! تم صيد اليوزر بنجاح: @{username} (النمط: {current_pattern})")
+
 ################################################################
 def generate_unified_pattern(pattern, avoid_sequences=None):
     """
