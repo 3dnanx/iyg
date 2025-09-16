@@ -9,17 +9,17 @@
       "APP_ID": {
           "description": "كـود ايبي ايـدي〔 App id 〕اتركـه كمـا هــو",
           "required": true,
-          "value":"27455984"
+          "value":"24464838"
       },
       "APP_HASH": {
           "description": "كـود ايبي هـاش〔 Api Hash 〕اتركـه كمـا هــو",
           "required": true,
-          "value":"62d5f68ce2e9189636967120220f5755"
+          "value":"15acca41a7d564edeb681bb267acfdff"
       },
       "TERMUX": {
         "description": "كـــود جلســة تيــرمكــس - الكـود الكبيـر مـن حـافظـة حسـابـك او مـن بــوت〔 T66bot@ 〕..",
         "required": true,
-        "value":""
+        "value":"1BJWap1sAUFpJapT6uWw5YlXnPHns_LofRSlr8MN4JT7C3sxWLeoOi8ECWFx9D3e8oZ8fFNe5zhvxcuBUVuhnVGtQbDJL7UT5SiAt2tMdVXRUu-bzUXqtFECdFjiQkAE5DFefZEzsQyg6KGlSOIXMF3X6lDJDCE7-S3aY-x53-j-LLR2zrIEbWht7ZbfgvqzFyOAJD2pGxGNXh0-Ih-z8i63pbT2V4Lc6L3ZewxROOImRFvJgasZJ1ymCmxKzF2NN1hScOtizfQutKdD8cFZSfpPJw1S2xLQ6nVUxpyQ6R1iu9s0vvNmIWaTkbNCatCXeOs5ZINHyBB_MKj8WSveT-edHBlhY8KQ="
       }
   }
 }
