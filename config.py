@@ -5,9 +5,9 @@ from pyro import validate_session
 # ضع القيم الخاصة بك هنا مباشرة
 APP_ID = 23035518
 # ضع هنا الـ APP_ID الخاص بك كرقم صحيح
-APP_HASH = "038341bd1a28b4cd0c6ca8802d94fb4d"
+APP_HASH = "1BJWap1sAUJH9C3Qa9Milwur6FDFqa5g-O2QB8vX2rwMkYvqQQr3D3vmgYUvxMIHYP79HPuTTkDZ_d5EDLKUGSPh9VuDdAQklrfsXhnHJGs2uqM6s9KrnM0MCOhrGj3aRCW3rfLKD4qv01bTblPGvz7yLt_SSgL1Hl5ucMcnsTnSr14IyOjS-fT3tM4fgLMsMXCMMTSqUvZUAk8SjEQbhwk4uOgS0VORkKaNvifClUmd_OPKgb-iFRmcRCYWZ3OUebEXNx34v97wkmG3p_sYoKQfhZP9gJRJ7MSK8VRARa-rk0YWrZFyrdn2CEurnNLhRx3_tHJs9prf5pJfFE8pqqWGPZy4j5Ak="
 # ضع هنا الـ APP_HASH كسلسلة نصية
-ss = "1BJWap1sAUFosxIHlA-jYLvxNS8uuybvvXkLZQbbCvZA5yuhF6aPGuEFz-UnS0_T8UN0iB0O8NQ6fXWE2wWHwbzK1tB4ZajgH6Z9IX284PCRdbGYe6iuAc1hPxczqwPd1_gPgxi2NhUBWQW0WICx_sKa9zk5Bt9vhJtq-OleMi6HtrTWjH8-U6jHxKDYTBWEjVd3Q_vkenul13Ll-psSt9REJ7R5HQkIY_XbBUZjxsJ-IN9IteoCgFXKB4Zcj263n7hqW-7Jc_yXLBB_89AwVZWBKifaZFAyxJqltrTKxCxCwRH0rshAFonqysEmza4d2Ni8M1WtiVp3q5D9nbJR3uitVz5M-2SI="
+ss = ""
   # ضع هنا الـ String Session كنص
 
 # التحقق من صحة الجلسة
