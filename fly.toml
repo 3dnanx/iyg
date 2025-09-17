@@ -1,32 +1,8 @@
-app = "baqhhhhg"          # اسم التطبيق
-primary_region = "fra"    # المنطقة الأساسية للتشغيل
+app = "afnchfd"
+primary_region = "fra"
 
-[experimental.attached]
-secrets = { }             # يمكن إضافة مفاتيح API هنا
+[build]
+  dockerfile = "Dockerfile"
 
 [processes]
-app = "python main.py"     # الأمر لتشغيل تطبيق بايثون
-
-[env]
-PORT = "8080"              # المنفذ الذي سيستمع عليه التطبيق
-
-[deploy]
-min_machines = 1           # يضمن أن هناك دائمًا جهاز شغال لتجنب توقف التطبيق
-
-[[services]]
-internal_port = 8080
-protocol = "tcp"
-
-[[services.ports]]
-port = 80
-handlers = ["http"]
-
-[[services.ports]]
-port = 443
-handlers = ["tls", "http"]
-
-[[services.tcp_checks]]
-interval = 10000       # فحص كل 10 ثواني
-timeout = 2000
-grace_period = "5s"
-restart_limit = 0      # يعيد التشغيل دائمًا إذا فشل التطبيق
+  app = "python IEX.py"
