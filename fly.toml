@@ -1,23 +1,42 @@
-# fly.toml app configuration file generated for iyg-botts3 on 2025-09-17T02:22:10Z
+# 1. أنشئ فرعاً جديداً باسم fly-config وانتقل إليه
+git checkout -b fly-config
+
+# 2. انسخ محتوى ملف fly.toml الذي أرسلته
+#    (أفضل طريقة: أنشئ الملف يدوياً في مجلد المشروع باستخدام محرر نصوص)
+#    أو استخدم هذا الأمر لإنشاء الملف تلقائياً وملئه بالمحتوى الصحيح:
+
+echo '# fly.toml app configuration file generated for iyg-botts3 on 2025-09-17T02:22:10Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'iyg-botts3'
-primary_region = 'cdg'
+app = '\''iyg-botts3'\''
+primary_region = '\''cdg'\''
 
 [build]
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = '\''stop'\''
   auto_start_machines = true
   min_machines_running = 0
-  processes = ['app']
+  processes = ['\''app'\'']
 
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
+  memory = '\''1gb'\''
+  cpu_kind = '\''shared'\''
   cpus = 1
-  memory_mb = 2048
+  memory_mb = 2048' > fly.toml
+
+# 3. تأكد من أن الملف قد تم إنشاؤه بشكل صحيح
+cat fly.toml
+
+# 4. أضف الملف إلى منطقة التجهيز (staging area)
+git add fly.toml
+
+# 5. احفظ التغييرات (commit)
+git commit -m "Add Fly.io deployment configuration"
+
+# 6. ارفع الفرع الجديد إلى GitHub
+git push origin fly-config
