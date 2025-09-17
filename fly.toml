@@ -5,4 +5,4 @@ primary_region = "fra"
 secrets = { }
 
 [processes]
-app = "python main.py"
+app = "python IEX.py"
