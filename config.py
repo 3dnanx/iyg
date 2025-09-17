@@ -3,11 +3,11 @@ from telethon.sessions import StringSession
 from pyro import validate_session
 
 # ضع القيم الخاصة بك هنا مباشرة
-APP_ID = 24464838
+APP_ID = 23035518
 # ضع هنا الـ APP_ID الخاص بك كرقم صحيح
-APP_HASH = "15acca41a7d564edeb681bb267acfdff"
+APP_HASH = "038341bd1a28b4cd0c6ca8802d94fb4d"
 # ضع هنا الـ APP_HASH كسلسلة نصية
-ss = "1BJWap1sAUFpJapT6uWw5YlXnPHns_LofRSlr8MN4JT7C3sxWLeoOi8ECWFx9D3e8oZ8fFNe5zhvxcuBUVuhnVGtQbDJL7UT5SiAt2tMdVXRUu-bzUXqtFECdFjiQkAE5DFefZEzsQyg6KGlSOIXMF3X6lDJDCE7-S3aY-x53-j-LLR2zrIEbWht7ZbfgvqzFyOAJD2pGxGNXh0-Ih-z8i63pbT2V4Lc6L3ZewxROOImRFvJgasZJ1ymCmxKzF2NN1hScOtizfQutKdD8cFZSfpPJw1S2xLQ6nVUxpyQ6R1iu9s0vvNmIWaTkbNCatCXeOs5ZINHyBB_MKj8WSveT-edHBlhY8KQ="
+ss = "1BJWap1sAUFosxIHlA-jYLvxNS8uuybvvXkLZQbbCvZA5yuhF6aPGuEFz-UnS0_T8UN0iB0O8NQ6fXWE2wWHwbzK1tB4ZajgH6Z9IX284PCRdbGYe6iuAc1hPxczqwPd1_gPgxi2NhUBWQW0WICx_sKa9zk5Bt9vhJtq-OleMi6HtrTWjH8-U6jHxKDYTBWEjVd3Q_vkenul13Ll-psSt9REJ7R5HQkIY_XbBUZjxsJ-IN9IteoCgFXKB4Zcj263n7hqW-7Jc_yXLBB_89AwVZWBKifaZFAyxJqltrTKxCxCwRH0rshAFonqysEmza4d2Ni8M1WtiVp3q5D9nbJR3uitVz5M-2SI="
   # ضع هنا الـ String Session كنص
 
 # التحقق من صحة الجلسة
