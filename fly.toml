@@ -1,8 +1,8 @@
-app = "asoatt"
+app = "baqervcx"
 primary_region = "fra"
 
 [experimental.attached]
 secrets = { }
 
 [processes]
-app = "python IEX.py"
+app = "python main.py"
