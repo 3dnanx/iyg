@@ -1,8 +1,0 @@
-app = "afnchfd"
-primary_region = "fra"
-
-[build]
-  dockerfile = "Dockerfile"
-
-[processes]
-  app = "python IEX.py"
