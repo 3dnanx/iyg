@@ -1,8 +1,29 @@
-app = "afnvcx"
-primary_region = "fra"
+app = "vcxxzfff"
+
+primary_region = "ams" # تقدر تغيّر المنطقة (ams = أمستردام مثلاً)
 
 [build]
   dockerfile = "Dockerfile"
 
-[processes]
-  app = "python IEX.py" 
+[env]
+  PYTHONUNBUFFERED = "1"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[services]]
+  internal_port = 8080
+  processes = ["app"]
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
